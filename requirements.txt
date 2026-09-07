@@ -1,0 +1,15 @@
+fastapi>=0.115.0
+uvicorn>=0.30.0
+pydantic>=2.10.0
+python-multipart>=0.0.12
+pillow>=10.4.0
+numpy>=1.26.0
+opencv-python-headless>=4.10.0
+rembg>=2.0.59
+onnxruntime>=1.19.0
+google-genai>=2.0.0
+python-dotenv>=1.0.0
+httpx>=0.28.0
+pytest>=8.0.0
+av>=13.0.0
+

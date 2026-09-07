@@ -1,0 +1,92 @@
+/* ==========================================================================
+   NIRMAAN DESIGN SYSTEM & THEME
+   Warm Indian Craft Palette: Terracotta, Sand, Deep Forest Green, Brass Gold
+   ========================================================================== */
+
+:root {
+  /* Brand Colors */
+  --color-terracotta: #C85A32;
+  --color-terracotta-dark: #A84320;
+  --color-terracotta-light: #F4E8E1;
+  
+  --color-forest: #1B4332;
+  --color-forest-light: #2D6A4F;
+  --color-forest-bg: #EAF4EE;
+  
+  --color-sand: #FBF7F0;
+  --color-sand-dark: #F2E9DC;
+  --color-sand-border: #E5D8C5;
+  
+  --color-gold: #D4AF37;
+  --color-gold-light: #FFF8E7;
+  --color-gold-dark: #B8860B;
+  
+  --color-charcoal: #1A1A1A;
+  --color-text-main: #2A2521;
+  --color-text-muted: #6B625B;
+  --color-text-light: #8E847C;
+  
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-border: #E8DFD5;
+  
+  /* Status Colors */
+  --color-success: #2E7D32;
+  --color-success-bg: #E8F5E9;
+  --color-warning: #ED6C02;
+  --color-warning-bg: #FFF3E0;
+  --color-danger: #D32F2F;
+  --color-danger-bg: #FFEBEE;
+  --color-info: #0288D1;
+  --color-info-bg: #E1F5FE;
+
+  /* Typography */
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", "Noto Sans", sans-serif;
+  --font-family-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", "Noto Serif", serif;
+  
+  /* Spacing */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  
+  /* Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 6px rgba(42, 37, 33, 0.06);
+  --shadow-md: 0 6px 18px rgba(42, 37, 33, 0.08);
+  --shadow-lg: 0 12px 32px rgba(42, 37, 33, 0.12);
+  --shadow-float: 0 8px 24px rgba(200, 90, 50, 0.28);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: #EDE4D8;
+  color: var(--color-text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  overflow-x: hidden;
+}

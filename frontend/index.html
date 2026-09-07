@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>NIRMAAN — AI-Powered Artisan Catalog & Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dekko&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/theme.css" />
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="icon" type="image/png" href="/static/images/favicon.png" />
+</head>
+<body>
+
+  <!-- Splash Screen (logo animation on launch) -->
+  <div id="splash-screen">
+    <div class="splash-logo-wrap"><img src="/static/images/logo.png" alt="NIRMAAN" /></div>
+    <div class="splash-title">NIRMAAN</div>
+    <div class="splash-subtitle" data-i18n="app.tagline">Artisan Catalog Studio</div>
+  </div>
+
+  <!-- Login / Registration Screen -->
+  <div id="auth-screen">
+   <div class="phone-frame-inner">
+    <div class="auth-header">
+      <img src="/static/images/logo.png" alt="NIRMAAN" />
+      <h2 data-i18n="auth.welcome">Welcome to NIRMAAN</h2>
+      <p data-i18n="auth.subtitle">Register or log in to start cataloging your craft.</p>
+    </div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="auth-tab-login" data-i18n="auth.tab_login">Log In</div>
+      <div class="auth-tab" id="auth-tab-register" data-i18n="auth.tab_register">New Registration</div>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="auth-form-panel active" id="auth-panel-login">
+      <div class="auth-field">
+        <label data-i18n="auth.mobile">Mobile Number</label>
+        <div class="auth-otp-row">
+          <input type="tel" id="login-mobile" placeholder="10-digit mobile number" maxlength="10" />
+          <button type="button" id="btn-send-otp-login" data-i18n="auth.send_otp">Send OTP</button>
+        </div>
+      </div>
+      <div class="auth-field" id="login-otp-field" style="display:none;">
+        <label data-i18n="auth.otp">Enter OTP</label>
+        <input type="text" id="login-otp" placeholder="Demo OTP: 123456" maxlength="6" />
+        <div class="auth-hint" data-i18n="auth.otp_hint">This is a demo — any mobile number works, use OTP 123456.</div>
+      </div>
+      <button class="btn btn-primary btn-lg" id="btn-submit-login" data-i18n="auth.login_btn">Log In</button>
+    </div>
+
+    <!-- REGISTRATION PANEL -->
+    <div class="auth-form-panel" id="auth-panel-register">
+      <div class="auth-field">
+        <label data-i18n="auth.full_name">Full Name</label>
+        <input type="text" id="reg-name" placeholder="e.g. Ramesh Kumar" />
+      </div>
+      <div class="auth-field">
+        <label data-i18n="auth.mobile">Mobile Number</label>
+        <input type="tel" id="reg-mobile" placeholder="10-digit mobile number" maxlength="10" />
+      </div>
+      <div class="auth-field">
+        <label data-i18n="auth.gender">Gender</label>
+        <select id="reg-gender">
+          <option value="Male" data-i18n="auth.gender_male">Male</option>
+          <option value="Female" data-i18n="auth.gender_female">Female</option>
+          <option value="Other" data-i18n="auth.gender_other">Other</option>
+        </select>
+      </div>
+      <div class="auth-field">
+        <label data-i18n="auth.craft_type">Primary Craft</label>
+        <select id="reg-craft">
+          <option>Pottery & Terracotta</option>
+          <option>Bamboo & Cane</option>
+          <option>Brass & Metal</option>
+          <option>Handloom & Sarees</option>
+          <option>Woodcraft</option>
+          <option>Jewellery</option>
+          <option>Paintings & Folk Art</option>
+          <option>Leather & Jute</option>
+          <option>Handmade Toys</option>
+          <option>Organic / Food</option>
+        </select>
+      </div>
+      <div class="auth-field">
+        <label data-i18n="auth.state">State</label>
+        <input type="text" id="reg-state" placeholder="e.g. Uttar Pradesh" />
+      </div>
+      <div class="auth-field">
+        <label data-i18n="auth.district">District / Town</label>
+        <input type="text" id="reg-district" placeholder="e.g. Khurja" />
+      </div>
+      <div class="auth-field">
+        <label data-i18n="auth.aadhaar">Aadhaar / Artisan ID Card No. (Optional)</label>
+        <input type="text" id="reg-aadhaar" placeholder="Optional — for scheme eligibility" maxlength="12" />
+      </div>
+      <button class="btn btn-primary btn-lg" id="btn-submit-register" data-i18n="auth.register_btn">Complete Registration</button>
+    </div>
+   </div>
+  </div>
+
+  <!-- Schemes Portal (shown once after registration/login, before Home) -->
+  <div id="schemes-portal-screen">
+   <div class="phone-frame-inner">
+    <div class="schemes-header">
+      <h2 data-i18n="schemes.title">Government Schemes For You</h2>
+      <p data-i18n="schemes.subtitle">Support programs from the Government of India for artisans like you.</p>
+    </div>
+    <div class="schemes-list" id="schemes-list-container">
+      <!-- Populated dynamically by app.js -->
+    </div>
+    <div class="schemes-footer">
+      <button class="btn btn-primary btn-lg" id="btn-schemes-continue" data-i18n="schemes.continue">Continue to NIRMAAN</button>
+    </div>
+   </div>
+  </div>
+
+  <!-- Persistent Mini Audio Player for Scheme Sarthi narrations -->
+  <div id="scheme-mini-player" style="display:none;">
+    <div class="mini-player-track-info">
+      <span id="mini-player-icon">🛠️</span>
+      <span id="mini-player-title">—</span>
+    </div>
+    <div class="mini-player-controls">
+      <button type="button" id="mini-player-prev" title="Previous">⏮</button>
+      <button type="button" id="mini-player-playpause" title="Play/Pause">▶️</button>
+      <button type="button" id="mini-player-next" title="Next">⏭</button>
+      <div class="mini-player-lang-toggle">
+        <button type="button" class="active" data-mini-lang="en">EN</button>
+        <button type="button" data-mini-lang="hi">HI</button>
+      </div>
+      <button type="button" id="mini-player-close" title="Close">✕</button>
+    </div>
+  </div>
+
+  <!-- Scheme Detail Modal -->
+  <div class="modal-overlay" id="scheme-detail-modal">
+    <div class="modal-sheet">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+        <h3 id="scheme-detail-title" style="font-size:17px; font-weight:800; flex:1;"></h3>
+        <button type="button" id="btn-speak-scheme" class="scheme-card-speak" title="Listen" style="margin-left:8px;">🔊</button>
+      </div>
+      <div class="scheme-detail-lang-tabs">
+        <button type="button" class="active" data-scheme-lang="en">English</button>
+        <button type="button" data-scheme-lang="hi">हिंदी</button>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:12px; font-weight:700; color:var(--color-terracotta-dark); margin-bottom:4px;" data-i18n="schemes.about">About</div>
+        <p id="scheme-detail-description" style="font-size:13px; line-height:1.5;"></p>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--color-terracotta-dark); margin-bottom:4px;" data-i18n="schemes.eligibility">Eligibility</div>
+        <ul id="scheme-detail-eligibility" style="font-size:13px; line-height:1.6; padding-left:18px;"></ul>
+      </div>
+      <button class="btn btn-sand" style="margin-top:var(--space-md);" onclick="document.getElementById('scheme-detail-modal').classList.remove('active')" data-i18n="schemes.close">Close</button>
+    </div>
+  </div>
+
+  <!-- Device Frame Toggle for Desktop Viewers -->
+  <div class="device-toggle-bar" id="btn-device-toggle">
+    <span>📱 Phone View</span>
+  </div>
+
+  <!-- Mobile Simulator Wrapper -->
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-logo-icon"><img src="/static/images/logo.png" alt="NIRMAAN logo" /></div>
+        <div class="brand-titles">
+          <h1>NIRMAAN</h1>
+          <span data-i18n="app.tagline">Artisan Catalog Studio</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="offline-pill" id="header-offline-status">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--color-success);"></span>
+          Online
+        </div>
+        <div class="lang-badge" id="header-lang-btn">
+          🌐 <span id="header-lang-label">हिंदी</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-content">
+
+      <!-- =========================================================================
+           VIEW 1: HOME SCREEN
+           ========================================================================= -->
+      <section class="view-container active" id="view-home">
+        <div class="hero-card">
+          <div class="hero-greeting">Namaste, <span id="header-artisan-name">Ramesh</span>! 🙏</div>
+          <div class="hero-subtitle" data-i18n="home.subtitle">Turn your craft into a professional digital catalog.</div>
+          <button class="btn btn-primary btn-lg" onclick="window.nirmaanApp.startNewProductFlow(1)">
+            <span style="font-size:20px;">➕</span> <span data-i18n="home.cta.new_product">Create Product</span>
+          </button>
+        </div>
+
+        <div class="section-header">
+          <span class="section-title" data-i18n="home.quick_tools">Quick Studio Tools</span>
+        </div>
+        
+        <div class="quick-actions-grid">
+          <div class="action-tile" data-action="create-photo">
+            <div class="action-tile-icon icon-camera">📷</div>
+            <div class="action-tile-title" data-i18n="home.tool_photo_title">AI Product Photo</div>
+            <div class="action-tile-desc" data-i18n="home.tool_photo_desc">Studio background & lighting</div>
+          </div>
+          <div class="action-tile" data-action="create-voice">
+            <div class="action-tile-icon icon-voice">🎙️</div>
+            <div class="action-tile-title" data-i18n="home.tool_voice_title">Speak Your Product</div>
+            <div class="action-tile-desc" data-i18n="home.tool_voice_desc">Describe in your language</div>
+          </div>
+          <div class="action-tile" data-action="calc-price">
+            <div class="action-tile-icon icon-price">💰</div>
+            <div class="action-tile-title" data-i18n="home.tool_calc_title">Calculate My Price</div>
+            <div class="action-tile-desc" data-i18n="home.tool_calc_desc">Fair wage cost calculator</div>
+          </div>
+          <div class="action-tile" data-action="check-market">
+            <div class="action-tile-icon icon-market">🌐</div>
+            <div class="action-tile-title" data-i18n="home.tool_market_title">Check Market Price</div>
+            <div class="action-tile-desc" data-i18n="home.tool_market_desc">Comparable prices in India</div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <span class="section-title" data-i18n="home.recent.title">My Recent Products</span>
+          <span class="section-link" onclick="window.nirmaanApp.switchView('products')">View All →</span>
+        </div>
+
+        <div id="home-recent-products">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </section>
+
+
+      <!-- =========================================================================
+           VIEW 2: CREATE PRODUCT FLOW (6-STEP STEPPER)
+           ========================================================================= -->
+      <section class="view-container" id="view-create">
+        
+        <!-- Stepper Progress Bar -->
+        <div class="stepper-bar">
+          <div class="stepper-step active" data-step="1" onclick="window.nirmaanApp.setCreateStep(1)">
+            <div class="step-circle">1</div>
+            <span>Photo</span>
+          </div>
+          <div class="stepper-step" data-step="2" onclick="window.nirmaanApp.setCreateStep(2)">
+            <div class="step-circle">2</div>
+            <span>Tell Us</span>
+          </div>
+          <div class="stepper-step" data-step="3">
+            <div class="step-circle">3</div>
+            <span>Catalog</span>
+          </div>
+          <div class="stepper-step" data-step="4" onclick="window.nirmaanApp.setCreateStep(4)">
+            <div class="step-circle">4</div>
+            <span>Review</span>
+          </div>
+          <div class="stepper-step" data-step="5" onclick="window.nirmaanApp.setCreateStep(5)">
+            <div class="step-circle">5</div>
+            <span>Price</span>
+          </div>
+          <div class="stepper-step" data-step="6" onclick="window.nirmaanApp.setCreateStep(6)">
+            <div class="step-circle">6</div>
+            <span>Publish</span>
+          </div>
+        </div>
+
+        <!-- STEP 1: PRODUCT PHOTO -->
+        <div class="create-step-container" id="step-container-1">
+          <div class="card" style="text-align:center;">
+            <h2 style="font-size:18px; font-weight:800; margin-bottom:4px;">Take a photo of your product</h2>
+            <p style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-md);">
+              Don't worry about the background. Just take a normal photo.
+            </p>
+
+            <input type="file" id="photo-file-input" accept="image/*" style="display:none;" />
+
+            <div class="upload-dropzone" id="photo-dropzone">
+              <div class="dropzone-icon">📷</div>
+              <div class="dropzone-title">Take Photo or Choose From Gallery</div>
+              <div class="dropzone-hint">Upload Front, Side, Back, Close-up, or in-hand photos.</div>
+            </div>
+
+            <div class="upload-btn-row">
+              <button class="btn btn-outline" onclick="document.getElementById('photo-file-input').click()">
+                🖼️ Choose From Gallery
+              </button>
+              <button class="btn btn-sand" id="btn-use-demo-photo">
+                ✨ Use Sample Craft Photo
+              </button>
+            </div>
+
+            <div id="photo-preview-grid" class="photo-preview-grid"></div>
+
+            <button class="btn btn-primary btn-lg" id="btn-step1-proceed" style="margin-top:var(--space-md);" onclick="window.nirmaanApp.proceedFromStep1()">
+              Next: Tell Us About Product ✨
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: SPEAK OR WRITE YOUR PRODUCT DESCRIPTION -->
+        <div class="create-step-container" id="step-container-2" style="display:none;">
+          
+          <!-- Mode Switcher Tabs (Speak vs Write) -->
+          <div class="pricing-tabs" style="margin-bottom:var(--space-sm);">
+            <button class="pricing-tab active" id="tab-input-voice" onclick="window.nirmaanApp.switchDescribeMode('voice')" data-i18n="create.mode.voice">🎙️ Speak Product</button>
+            <button class="pricing-tab" id="tab-input-text" onclick="window.nirmaanApp.switchDescribeMode('text')" data-i18n="create.mode.text">✍️ Write Description</button>
+          </div>
+
+          <!-- VOICE INPUT PANEL -->
+          <!-- VOICE INPUT PANEL -->
+          <div id="describe-panel-voice" class="voice-hero-box">
+            <h2 style="font-size:18px; font-weight:800; margin-bottom:4px;" data-i18n="create.step2.title">Tell us about your product</h2>
+            <p style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-sm);" data-i18n="create.step2.subtitle">
+              Speak in your own language — English, हिंदी, मराठी, বাংলা, தமிழ், etc.
+            </p>
+
+            <!-- Speaking Language Selector -->
+            <div style="margin-bottom:var(--space-md); display:flex; justify-content:center; align-items:center; gap:8px;">
+              <span style="font-size:12px; font-weight:700; color:var(--color-text-muted);" data-i18n="create.speaking_in">🎙️ Speaking In:</span>
+              <select id="voice-language-select" class="btn btn-sand" style="width:auto; padding:6px 12px; font-size:12px; font-weight:700; border:1.5px solid var(--color-terracotta); background:#FFF;">
+                <option value="en-IN">English (India)</option>
+                <option value="hi-IN" selected>हिंदी (Hindi)</option>
+                <option value="mr-IN">मराठी (Marathi)</option>
+                <option value="bn-IN">বাংলা (Bengali)</option>
+                <option value="gu-IN">ગુજરાતી (Gujarati)</option>
+                <option value="ta-IN">தமிழ் (Tamil)</option>
+                <option value="te-IN">తెలుగు (Telugu)</option>
+                <option value="kn-IN">ಕನ್ನಡ (Kannada)</option>
+                <option value="pa-IN">ਪੰਜਾਬੀ (Punjabi)</option>
+                <option value="ml-IN">മലയാളം (Malayalam)</option>
+              </select>
+            </div>
+
+            <button class="voice-mic-btn" id="voice-mic-btn">
+              🎙️
+            </button>
+            <div style="font-size:12px; font-weight:700; color:var(--color-terracotta-dark); margin-bottom:var(--space-sm);" data-i18n="create.mic.tap">Tap to Record Your Voice</div>
+
+            <div class="voice-wave-container">
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+            </div>
+
+            <div id="voice-live-transcript" style="font-size:14px; font-weight:600; color:var(--color-text-muted); min-height:42px; padding:8px; background:var(--color-surface); border-radius:var(--radius-sm); border:1px solid var(--color-border); margin-bottom:var(--space-md);" data-i18n="create.mic.placeholder">
+              🎙️ Record your voice here — describe your product in your own words.
+            </div>
+
+            <div style="text-align:left;">
+              <span style="font-size:11px; font-weight:700; color:var(--color-text-muted);" data-i18n="create.examples.title">Quick Spoken Examples (Tap to use):</span>
+              <div class="speech-sample-chips" id="speech-sample-chips-container">
+                <span class="speech-chip" data-text="यह मिट्टी का सर्विंग बाउल है, शुद्ध लाल मिट्टी से चाक पर बनाया है, 4 घंटे लगे बनाने में।">🏺 Terracotta Bowl (4 hrs)</span>
+                <span class="speech-chip" data-text="यह प्राकृतिक बांस से हाथ से बुनी फल रखने की मजबूत टोकरी है, कीमत 500 रुपये।">🧺 Bamboo Basket (₹500)</span>
+                <span class="speech-chip" data-text="पारंपरिक ठोस पीतल का मोर दीया, पूजा और दीपावली सजावट के लिए।">🪔 Brass Diya (Brass casting)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- WRITTEN TEXT INPUT PANEL -->
+          <div id="describe-panel-text" class="card" style="display:none; text-align:left;">
+            <h2 style="font-size:18px; font-weight:800; margin-bottom:4px;">Write your product description</h2>
+            <p style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-md);">
+              Type details in any language — material, craft technique, hours taken, dimensions, or how it is used.
+            </p>
+
+            <div class="calc-input-group">
+              <label style="font-size:12px; font-weight:700; color:var(--color-text-main);">Product Description:</label>
+              <textarea id="text-description-input" class="btn btn-sand" style="text-align:left; font-size:14px; min-height:130px; line-height:1.4; resize:vertical; width:100%; margin-top:4px; font-family:inherit;" placeholder="e.g. यह मिट्टी का सर्विंग बाउल है, शुद्ध लाल मिट्टी से चाक पर बनाया है, 4 घंटे लगे बनाने में। Ideal for dining and rustic home decor."></textarea>
+            </div>
+
+            <div style="font-size:11px; color:var(--color-text-muted); margin-bottom:var(--space-xs);">
+              💡 <strong>Tip:</strong> Mention material (clay, brass, bamboo, cotton), time taken, and special handmade techniques.
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg" id="btn-voice-next" style="margin-top:var(--space-sm);" data-i18n="create.next.catalog">
+            Next: Create Professional Catalog ✨
+          </button>
+        </div>
+
+        <!-- STEP 3: AI PROCESSING SCREEN -->
+        <div class="create-step-container" id="step-container-3" style="display:none;">
+          <div class="ai-processing-card">
+            <div class="ai-spinner"></div>
+            <h2 style="font-size:18px; font-weight:800; margin-bottom:6px;">Creating your product catalog…</h2>
+            <p style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-lg);">
+              Our AI assistant is enhancing your photos and structuring multilingual details.
+            </p>
+
+            <div class="ai-checklist">
+              <div class="checklist-item" id="ai-step-1"><span class="checklist-icon">⏳</span> Understanding your product</div>
+              <div class="checklist-item" id="ai-step-2"><span class="checklist-icon">⏳</span> Finding the product & removing background</div>
+              <div class="checklist-item" id="ai-step-3"><span class="checklist-icon">⏳</span> Protecting your product authenticity</div>
+              <div class="checklist-item" id="ai-step-4"><span class="checklist-icon">⏳</span> Improving lighting, exposure & sharpness</div>
+              <div class="checklist-item" id="ai-step-5"><span class="checklist-icon">⏳</span> Creating professional marketplace photo</div>
+              <div class="checklist-item" id="ai-step-6"><span class="checklist-icon">⏳</span> Extracting your product's features</div>
+              <div class="checklist-item" id="ai-step-7"><span class="checklist-icon">⏳</span> Preparing your multilingual catalog</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: AI CATALOG & PRODUCT IMAGE VIEWER -->
+        <div class="create-step-container" id="step-container-4" style="display:none;">
+          
+          <!-- Modern Mobile E-Commerce Image Viewer -->
+          <div class="product-image-viewer">
+            <div class="viewer-hero">
+              <img id="catalog-viewer-hero-img" src="/static/images/terracotta_marketplace.jpg" alt="Product" />
+              <div class="viewer-counter-badge" id="catalog-viewer-counter">1 / 3 • MARKETPLACE</div>
+              
+              <!-- Previous / Next Image Arrows -->
+              <button class="viewer-nav-btn prev-btn" id="btn-viewer-prev" onclick="window.nirmaanApp.cycleCatalogImage(-1)">‹</button>
+              <button class="viewer-nav-btn next-btn" id="btn-viewer-next" onclick="window.nirmaanApp.cycleCatalogImage(1)">›</button>
+
+              <!-- Zoom / Fullscreen Button -->
+              <button class="viewer-zoom-btn" onclick="window.nirmaanApp.openImageFullscreen()">🔍</button>
+            </div>
+            
+            <div class="viewer-tab-bar">
+              <button class="viewer-tab active" data-img-type="marketplace" data-i18n="tabs.marketplace">Marketplace</button>
+              <button class="viewer-tab" data-img-type="studio_pro" data-i18n="tabs.studio_pro">Professional Studio</button>
+              <button class="viewer-tab" data-img-type="original" data-i18n="tabs.original">Original</button>
+              <button class="viewer-tab" data-img-type="features" data-i18n="tabs.features">Features</button>
+            </div>
+
+            <div class="compare-btn-bar">
+              <span style="font-size:11px; color:var(--color-text-muted);">Authenticity Lock: <strong>Active ✓</strong></span>
+              <button class="btn btn-sand" style="width:auto; padding:5px 10px; font-size:11px;" id="btn-toggle-compare" onclick="window.nirmaanApp.toggleCompareSplit()">
+                🔄 View Original vs AI
+              </button>
+            </div>
+
+            <!-- Studio Backdrop Style Switcher -->
+            <div style="padding:8px 12px; background:var(--color-sand); border-top:1px solid var(--color-sand-border);">
+              <div style="font-size:11px; font-weight:700; color:var(--color-text-muted); margin-bottom:4px;">✨ Change AI Studio Backdrop:</div>
+              <div class="category-scroll-chips" style="margin-bottom:0; padding-bottom:0; overflow-x:auto;">
+                <span class="style-chip active" onclick="window.nirmaanApp.applyStudioStyle(this, 'clean_studio')">🏛️ Studio White</span>
+                <span class="style-chip" onclick="window.nirmaanApp.applyStudioStyle(this, 'warm_wood')">🪵 Warm Wood</span>
+                <span class="style-chip" onclick="window.nirmaanApp.applyStudioStyle(this, 'earthy_haat')">🏺 Earthy Clay</span>
+                <span class="style-chip" onclick="window.nirmaanApp.applyStudioStyle(this, 'festive_amber')">✨ Festive Gold</span>
+                <span class="style-chip" onclick="window.nirmaanApp.applyStudioStyle(this, 'organic_green')">🌿 Nature Green</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multilingual Product Info Card -->
+          <div class="card">
+            <!-- AI Verification & Factuality Banner -->
+            <div id="ai-verification-box" style="background:linear-gradient(135deg, #E8F5E9, #F1F8E9); border:1.5px solid #A5D6A7; border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:var(--space-sm);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span style="font-size:12px; font-weight:800; color:#1B5E20;">🛡️ AI Verified & Synthesized</span>
+                <span style="font-size:10px; font-weight:700; color:#2E7D32; background:#C8E6C9; padding:2px 8px; border-radius:var(--radius-pill);">Authentic Craft Lock ✓</span>
+              </div>
+              <div id="ai-verification-badges" style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:4px;">
+                <span class="speech-chip" style="font-size:10px; padding:2px 8px; background:#FFF;">✓ Verified Craft Technique</span>
+                <span class="speech-chip" style="font-size:10px; padding:2px 8px; background:#FFF;">✓ Raw Material Verified</span>
+                <span class="speech-chip" style="font-size:10px; padding:2px 8px; background:#FFF;">✓ Zero Prohibited Claims</span>
+              </div>
+              <div style="font-size:11px; color:#2E7D32; line-height:1.3;">
+                AI analyzed your description and crafted a high-converting storytelling catalog.
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-xs);">
+              <div class="lang-tab-bar" style="margin-bottom:0; border-bottom:none;">
+                <button class="lang-tab active" data-lang="original">Original</button>
+                <button class="lang-tab" data-lang="hi">हिंदी</button>
+                <button class="lang-tab" data-lang="en">English</button>
+              </div>
+              <div style="display:flex; gap:4px;">
+                <button class="btn btn-sand btn-icon-only" title="Edit Description Directly" onclick="window.nirmaanApp.toggleInPlaceEdit()">
+                  ✏️
+                </button>
+                <button class="btn btn-sand btn-icon-only" title="Listen Spoken Description" onclick="window.nirmaanApp.narrateCurrentDescription()">
+                  🔊
+                </button>
+              </div>
+            </div>
+
+            <!-- In-Place Edit Panel (Hidden by default) -->
+            <div id="catalog-inplace-edit-panel" style="display:none; background:var(--color-sand); padding:var(--space-sm); border-radius:var(--radius-sm); margin-bottom:var(--space-sm);">
+              <label style="font-size:11px; font-weight:700;">Edit Title:</label>
+              <input type="text" id="edit-catalog-title-input" class="btn btn-sand" style="text-align:left; font-size:14px; font-weight:700; margin:4px 0 var(--space-xs);" />
+              <label style="font-size:11px; font-weight:700;">Edit Description:</label>
+              <textarea id="edit-catalog-desc-input" class="btn btn-sand" style="text-align:left; font-size:13px; min-height:80px; width:100%; font-family:inherit; margin:4px 0 var(--space-xs);"></textarea>
+              <div style="display:flex; gap:6px;">
+                <button class="btn btn-primary" style="padding:6px 12px; font-size:12px; width:auto;" onclick="window.nirmaanApp.saveInPlaceEdit()">Save Edits</button>
+                <button class="btn btn-sand" style="padding:6px 12px; font-size:12px; width:auto;" onclick="window.nirmaanApp.toggleInPlaceEdit()">Cancel</button>
+              </div>
+            </div>
+
+            <h3 id="catalog-title-display" style="font-size:16px; font-weight:800; margin-bottom:6px; color:var(--color-text-main);">
+              हस्तनिर्मित प्राकृतिक टेराकोटा बाउल
+            </h3>
+            
+            <p id="catalog-desc-display" style="font-size:13px; color:var(--color-text-muted); line-height:1.4; margin-bottom:var(--space-md);">
+              पारंपरिक कुम्हार चाक पर शुद्ध लाल मिट्टी से निर्मित। भोजन व सजावट के लिए आदर्श।
+            </p>
+
+            <!-- Structured Attributes Grid -->
+            <div class="attributes-grid" id="catalog-attributes-grid">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- SEO Keywords -->
+            <div style="font-size:11px; font-weight:700; color:var(--color-text-muted); margin-bottom:4px;">SEO Buyer Search Keywords:</div>
+            <div id="catalog-keywords-chips" style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--space-md);"></div>
+
+            <!-- Voice-Based Editing Bar -->
+            <div class="voice-command-bar">
+              <span style="font-size:18px;">🎙️</span>
+              <input type="text" id="voice-cmd-input" placeholder="Say: 'Change color to Indigo' or 'Add that this is handmade'" />
+              <button class="btn btn-sand" id="btn-exec-voice-cmd" style="width:auto; padding:6px 12px; font-size:12px;">Apply</button>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg" onclick="window.nirmaanApp.setCreateStep(5)">
+            Next: Smart Pricing & Market Intelligence 💰
+          </button>
+        </div>
+
+        <!-- STEP 5: SMART PRICING HUB -->
+        <div class="create-step-container" id="step-container-5" style="display:none;">
+          
+          <div class="pricing-tabs">
+            <button class="pricing-tab active" data-pricing-tab="calc" data-i18n="tabs.calc_price">💰 Calculate My Price</button>
+            <button class="pricing-tab" data-pricing-tab="market" data-i18n="tabs.market_price">🌐 Check Market Price</button>
+            <button class="pricing-tab" data-pricing-tab="insight" data-i18n="tabs.pricing_insight">💡 Pricing Insight</button>
+          </div>
+
+          <!-- TAB 1: CALCULATE MY PRICE -->
+          <div class="pricing-panel" id="pricing-panel-calc">
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-sm);">
+                <span style="font-size:15px; font-weight:800;">Calculate My Price (Offline)</span>
+                <span class="status-badge status-published">Deterministic</span>
+              </div>
+              
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <span>Material Cost</span>
+                  <span id="calc-material-val" style="color:var(--color-terracotta-dark);">₹200</span>
+                </div>
+                <input type="range" class="calc-slider" id="calc-material" min="50" max="2000" step="50" value="200" />
+              </div>
+
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <span>Time Spent (Hours)</span>
+                  <span id="calc-hours-val" style="color:var(--color-terracotta-dark);">4 hrs</span>
+                </div>
+                <input type="range" class="calc-slider" id="calc-hours" min="0.5" max="20" step="0.5" value="4" />
+              </div>
+
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <span>Labour Rate (₹/Hour)</span>
+                  <span id="calc-rate-val" style="color:var(--color-terracotta-dark);">₹150/hr</span>
+                </div>
+                <input type="range" class="calc-slider" id="calc-rate" min="50" max="500" step="25" value="150" />
+              </div>
+
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <span>Material Wastage %</span>
+                  <span id="calc-wastage-val">0%</span>
+                </div>
+                <input type="range" class="calc-slider" id="calc-wastage" min="0" max="30" step="5" value="0" />
+              </div>
+
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <span>Profit Margin %</span>
+                  <span id="calc-margin-val">30%</span>
+                </div>
+                <input type="range" class="calc-slider" id="calc-margin" min="10" max="60" step="5" value="30" />
+              </div>
+
+              <!-- Price Tiers -->
+              <div class="price-tiers-grid">
+                <div class="price-tier-card">
+                  <div class="tier-title">Cost Floor</div>
+                  <div class="tier-value" id="cost-floor-display">₹800</div>
+                  <div style="font-size:9px; color:var(--color-text-muted);">Recovers costs</div>
+                </div>
+                <div class="price-tier-card highlight">
+                  <div class="tier-title">Recommended Price</div>
+                  <div class="tier-value" id="rec-price-display">₹1,040</div>
+                  <div style="font-size:9px; color:var(--color-forest);">Cost + Profit</div>
+                </div>
+                <div class="price-tier-card">
+                  <div class="tier-title">Premium Price</div>
+                  <div class="tier-value" id="prem-price-display">₹1,248</div>
+                  <div style="font-size:9px; color:var(--color-text-muted);">1.20× Multiplier</div>
+                </div>
+              </div>
+
+              <div id="calc-breakdown-text" style="font-size:11px; color:var(--color-text-muted); background:var(--color-sand); padding:8px; border-radius:var(--radius-sm); margin-bottom:var(--space-md);"></div>
+
+              <button class="btn btn-secondary" id="btn-apply-recommended-price">
+                Use ₹1,040 as Product Price
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 2: CHECK MARKET PRICE -->
+          <div class="pricing-panel" id="pricing-panel-market" style="display:none;">
+            <div class="card">
+              <!-- Requirement 40: Confirmation Card before search -->
+              <div style="background:var(--color-sand); border:1px solid var(--color-sand-border); border-radius:var(--radius-sm); padding:var(--space-sm); margin-bottom:var(--space-sm);">
+                <div style="display:flex; gap:10px; align-items:center;">
+                  <img id="market-confirm-img" src="/static/images/terracotta_marketplace.jpg" style="width:48px; height:48px; border-radius:var(--radius-sm); object-fit:cover; border:1px solid var(--color-border);" alt="Product Thumbnail" />
+                  <div style="flex:1;">
+                    <div style="font-size:11px; color:var(--color-text-muted);">Searching market prices for:</div>
+                    <div style="font-size:14px; font-weight:800; color:var(--color-text-main);" id="market-confirm-title">Handcrafted Terracotta Serving Bowl</div>
+                    <div style="font-size:11px; font-weight:700; color:var(--color-terracotta);" id="market-confirm-meta">Pottery • Natural Clay • Terracotta</div>
+                  </div>
+                </div>
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                  <button class="btn btn-primary" style="padding:4px 12px; font-size:11px; width:auto;" id="btn-confirm-market-search">✓ YES, SEARCH</button>
+                  <button class="btn btn-sand" style="padding:4px 10px; font-size:11px; width:auto;" onclick="window.nirmaanApp.promptChangeMarketProduct()">✏️ CHANGE SEARCH</button>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-sm);">
+                <span style="font-size:15px; font-weight:800;">Market Intelligence (India)</span>
+                <span class="status-badge" id="market-confidence-pill">🟢 High Confidence</span>
+              </div>
+
+              <div class="market-range-box">
+                <div style="font-size:11px; font-weight:700; color:var(--color-text-muted); text-transform:uppercase;">Estimated Market Range</div>
+                <div class="market-range-val" id="market-range-display">₹349 — ₹550</div>
+                <div style="font-size:12px; color:var(--color-forest); font-weight:700; margin-top:2px;">
+                  Typical Market Price: <span id="typical-price-display">₹399</span>
+                </div>
+              </div>
+
+              <div style="font-size:11px; color:var(--color-text-muted); margin-bottom:var(--space-sm);" id="market-presence-text">
+                Established category with active online artisan listings
+              </div>
+
+              <div style="font-size:13px; font-weight:700; margin-bottom:6px;">Comparable Handcrafted Products (Outliers Filtered):</div>
+              <div id="market-comparables-list">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: PRICING INSIGHT DASHBOARD -->
+          <div class="pricing-panel" id="pricing-panel-insight" style="display:none;">
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-sm);">
+                <span style="font-size:15px; font-weight:800;">Pricing Insight Dashboard</span>
+                <button class="btn btn-sand btn-icon-only" title="Listen Pricing Advice" onclick="window.nirmaanApp.narratePricingAdvice()">
+                  🔊
+                </button>
+              </div>
+
+              <div class="calc-input-group">
+                <div class="calc-label-row">
+                  <span>Your Current Set Price:</span>
+                </div>
+                <input type="number" id="custom-price-input" class="btn btn-sand" style="text-align:left; font-size:16px; font-weight:800;" value="399" onchange="window.nirmaanApp.currentWorkingProduct.price = parseFloat(this.value); window.nirmaanApp.refreshPricingInsight();" />
+              </div>
+
+              <!-- Insight Alert Banner (Below-Cost, Underpricing, Competitive, High-Price) -->
+              <div id="pricing-insight-banner" class="insight-banner insight-competitive">
+                <!-- Populated dynamically -->
+              </div>
+
+              <div style="font-size:13px; font-weight:700; margin-bottom:6px;">Actionable Advice for Artisan:</div>
+              <ul id="pricing-advice-list" style="padding-left:18px; margin-bottom:var(--space-md);">
+                <!-- Populated dynamically -->
+              </ul>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg" id="btn-pricing-to-review" style="margin-top:var(--space-sm);">
+            Next: Review & Publish Listing →
+          </button>
+        </div>
+
+        <!-- STEP 6: REVIEW & PUBLISH -->
+        <div class="create-step-container" id="step-container-6" style="display:none;">
+          <div class="card" style="text-align:center;">
+            <div style="font-size:32px; margin-bottom:4px;">🎉</div>
+            <h2 style="font-size:18px; font-weight:800; margin-bottom:4px;">Your Product is Ready!</h2>
+            <p style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-md);">
+              Review your professional listing below before publishing or sharing.
+            </p>
+
+            <!-- Reusable Product Card -->
+            <div style="border:1px solid var(--color-border); border-radius:var(--radius-md); overflow:hidden; margin-bottom:var(--space-md); text-align:left;">
+              <img id="review-hero-img" src="/static/images/terracotta_marketplace.jpg" style="width:100%; aspect-ratio:1; object-fit:cover;" alt="Product" />
+              <div style="padding:var(--space-md);">
+                <h3 id="review-title" style="font-size:16px; font-weight:800;">Handcrafted Terracotta Bowl</h3>
+                <div id="review-price" style="font-size:18px; font-weight:800; color:var(--color-terracotta-dark); margin:6px 0;">₹399</div>
+                <p id="review-desc" style="font-size:12px; color:var(--color-text-muted); line-height:1.4;"></p>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:var(--space-sm);">
+              <button class="btn btn-primary btn-lg" id="btn-publish-product">
+                🛍️ Publish to NIRMAAN Marketplace
+              </button>
+              <button class="btn btn-secondary" id="btn-share-whatsapp">
+                💬 Share on WhatsApp
+              </button>
+              <div style="display:flex; gap:var(--space-sm);">
+                <button class="btn btn-outline" onclick="window.nirmaanApp.setCreateStep(4)">
+                  ✏️ Edit
+                </button>
+                <button class="btn btn-sand" onclick="window.nirmaanApp.exportProductCard()">
+                  📥 Download Photo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- =========================================================================
+           VIEW 3: MY PRODUCTS & DIGITAL CATALOGS
+           ========================================================================= -->
+      <section class="view-container" id="view-products">
+        <div class="section-header">
+          <span class="section-title">My Digital Catalogs</span>
+          <button class="btn btn-sand" style="width:auto; padding:4px 10px; font-size:11px;" onclick="window.nirmaanApp.openCreateCollectionModal()">
+            + New Collection
+          </button>
+        </div>
+        <div id="my-catalogs-list">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="section-header" style="margin-top:var(--space-lg);">
+          <span class="section-title">All Products</span>
+        </div>
+        <div id="my-products-full-list">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+
+      <!-- =========================================================================
+           VIEW 4: MARKETPLACE BROWSER
+           ========================================================================= -->
+      <section class="view-container" id="view-marketplace">
+        <div style="margin-bottom:var(--space-md);">
+          <input type="text" id="marketplace-search-input" class="btn btn-sand" style="text-align:left; font-size:13px; padding:10px 14px;" placeholder="🔍 Search pottery, handloom sarees, brass..." />
+        </div>
+
+        <!-- Category Scroll Chips -->
+        <div class="category-scroll-chips">
+          <span class="category-chip active" data-category="All" data-i18n="tabs.cat_all">All</span>
+          <span class="category-chip" data-category="Pottery" data-i18n="tabs.cat_pottery">Pottery</span>
+          <span class="category-chip" data-category="Bamboo" data-i18n="tabs.cat_bamboo">Bamboo</span>
+          <span class="category-chip" data-category="Metal" data-i18n="tabs.cat_metal">Metal Craft</span>
+          <span class="category-chip" data-category="Textiles" data-i18n="tabs.cat_textiles">Textiles</span>
+          <span class="category-chip" data-category="Jewellery" data-i18n="tabs.cat_jewellery">Jewellery</span>
+          <span class="category-chip" data-category="Woodcraft" data-i18n="tabs.cat_woodcraft">Woodcraft</span>
+        </div>
+
+        <div class="marketplace-grid" id="marketplace-products-grid">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+
+      <!-- =========================================================================
+           VIEW 5: ARTISAN PROFILE & ONBOARDING
+           ========================================================================= -->
+      <section class="view-container" id="view-profile">
+        <div class="card" style="text-align:center;">
+          <img src="/static/images/artisan_avatar.png" style="width:72px; height:72px; border-radius:50%; margin:0 auto var(--space-xs); border:3px solid var(--color-terracotta);" alt="Avatar" />
+          <h2 id="profile-artisan-name" style="font-size:18px; font-weight:800;">Ramesh Kumar</h2>
+          <div id="profile-artisan-craft" style="font-size:12px; font-weight:700; color:var(--color-terracotta);">Terracotta & Pottery • Artisan</div>
+          <div id="profile-artisan-region" style="font-size:11px; color:var(--color-text-muted); margin-bottom:var(--space-md);">📍 Khurja, Uttar Pradesh</div>
+
+          <div style="text-align:left; background:var(--color-sand); padding:var(--space-sm); border-radius:var(--radius-sm); margin-bottom:var(--space-md);">
+            <span style="font-size:11px; font-weight:700; color:var(--color-text-muted); text-transform:uppercase;">Artisan Story</span>
+            <p id="profile-artisan-bio" style="font-size:12px; color:var(--color-text-main); line-height:1.4; margin-top:2px;">
+              3rd generation master potter specializing in hand-thrown terracotta, natural clay kitchenware, and traditional painted earthen lamps.
+            </p>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-xs); margin-bottom:var(--space-md);">
+            <div class="attr-pill">
+              <span class="attr-label">Published Products</span>
+              <div class="attr-val">3 Live</div>
+            </div>
+            <div class="attr-pill">
+              <span class="attr-label">Digital Catalogs</span>
+              <div class="attr-val">2 Collections</div>
+            </div>
+          </div>
+
+          <button class="btn btn-outline" onclick="window.nirmaanApp.openOnboardingModal()" data-i18n="profile.edit">
+            ✏️ Edit Artisan Profile & Preferences
+          </button>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           VIEW: SCHEME SARTHI (Government Schemes, reachable anytime)
+           ========================================================================= -->
+      <section class="view-container" id="view-schemes">
+        <div class="section-header">
+          <span class="section-title" data-i18n="schemes.title">Government Schemes For You</span>
+        </div>
+        <p style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-md);" data-i18n="schemes.subtitle">
+          Support programs from the Government of India for artisans like you.
+        </p>
+
+        <div id="schemes-view-list-container">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-view="home">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="nav.home">Home</span>
+      </button>
+      <button class="nav-item" data-view="products">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.products">My Products</span>
+      </button>
+      <div class="nav-fab-wrap">
+        <div class="nav-fab" id="nav-fab-create">
+          <span class="fab-icon">+</span>
+        </div>
+      </div>
+      <button class="nav-item" data-view="marketplace">
+        <span class="nav-icon">🛍️</span>
+        <span data-i18n="nav.marketplace">Marketplace</span>
+      </button>
+      <button class="nav-item" data-view="schemes">
+        <span class="nav-icon">🏛️</span>
+        <span data-i18n="nav.schemes">Scheme Sarthi</span>
+      </button>
+      <button class="nav-item" data-view="profile">
+        <span class="nav-icon">👤</span>
+        <span data-i18n="nav.profile">Profile</span>
+      </button>
+    </nav>
+
+    <!-- Draft Recovery Modal Sheet -->
+    <div class="modal-overlay" id="draft-recovery-modal">
+      <div class="modal-sheet">
+        <h3 style="font-size:16px; font-weight:800; margin-bottom:4px;">Continue creating your product?</h3>
+        <p style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-md);">
+          We found an unsaved product draft from your previous session.
+        </p>
+        <div style="display:flex; gap:var(--space-sm);">
+          <button class="btn btn-primary" id="btn-draft-continue">Continue Draft</button>
+          <button class="btn btn-sand" id="btn-draft-discard">Start Again</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- First-Run Language Picker (shown once, before anything else) -->
+    <div class="modal-overlay" id="language-picker-modal">
+      <div class="modal-sheet">
+        <h3 data-i18n="langpicker.title" style="font-size:18px; font-weight:800; margin-bottom:4px;">Choose your language</h3>
+        <p data-i18n="langpicker.subtitle" style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-md);">
+          आप हिंदी या अंग्रेज़ी चुन सकते हैं — More languages coming soon.
+        </p>
+        <button type="button" class="lang-picker-btn lang-hi-btn" id="btn-pick-lang-hi">🌐 हिंदी</button>
+        <button type="button" class="lang-picker-btn" id="btn-pick-lang-en">🌐 English</button>
+      </div>
+    </div>
+
+    <!-- Onboarding / Profile Edit Modal -->
+    <div class="modal-overlay" id="onboarding-modal">
+      <div class="modal-sheet">
+        <h3 data-i18n="onboarding.title" style="font-size:18px; font-weight:800; margin-bottom:4px;">Welcome to NIRMAAN</h3>
+        <p data-i18n="onboarding.subtitle" style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-md);">
+          Tell us about yourself so we can configure your studio assistant.
+        </p>
+        
+        <div class="calc-input-group">
+          <label data-i18n="onboarding.name" style="font-size:12px; font-weight:700;">Your Name / Business Name:</label>
+          <input type="text" id="onboarding-name" class="btn btn-sand" style="text-align:left; font-size:14px; margin-top:4px;" value="Ramesh Kumar" />
+        </div>
+
+        <div class="calc-input-group">
+          <label data-i18n="onboarding.language" style="font-size:12px; font-weight:700;">Preferred Language:</label>
+          <select id="onboarding-language" class="btn btn-sand" style="text-align:left; font-size:14px; margin-top:4px;">
+            <option value="hi" selected>हिंदी (Hindi)</option>
+            <option value="en">English</option>
+          </select>
+          <div data-i18n="onboarding.language.note" style="font-size:10px; color:var(--color-text-muted); margin-top:4px;">More languages coming soon.</div>
+        </div>
+
+        <div class="calc-input-group">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label data-i18n="onboarding.craft" style="font-size:12px; font-weight:700;">What do you make? (Select multiple)</label>
+            <span style="font-size:10px; color:var(--color-terracotta); font-weight:700;">Multi-Select</span>
+          </div>
+          <div class="craft-choice-grid" id="onboarding-craft-grid">
+            <label class="craft-choice-card selected">
+              <input type="checkbox" class="craft-checkbox" value="Pottery & Terracotta" checked onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">🏺</span>
+              <span class="craft-card-label">Pottery / Terracotta</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Bamboo & Cane Craft" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">🧺</span>
+              <span class="craft-card-label">Bamboo & Cane</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Brass & Metal Craft" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">🪔</span>
+              <span class="craft-card-label">Brass & Metal</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Handloom & Sarees" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">🧵</span>
+              <span class="craft-card-label">Handloom & Sarees</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Woodcraft & Carving" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">🪵</span>
+              <span class="craft-card-label">Woodcraft</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Handmade Jewellery" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">💍</span>
+              <span class="craft-card-label">Jewellery</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Traditional Paintings" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">🎨</span>
+              <span class="craft-card-label">Paintings & Folk Art</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Leather & Jute Craft" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">👜</span>
+              <span class="craft-card-label">Leather & Jute</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Traditional Toys" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">🧸</span>
+              <span class="craft-card-label">Handmade Toys</span>
+            </label>
+            <label class="craft-choice-card">
+              <input type="checkbox" class="craft-checkbox" value="Natural Food & Agri" onchange="this.closest('.craft-choice-card').classList.toggle('selected', this.checked)" />
+              <span class="craft-card-icon">🌾</span>
+              <span class="craft-card-label">Organic / Food</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="calc-input-group">
+          <label style="font-size:12px; font-weight:700;">Seller Type:</label>
+          <select id="onboarding-seller-type" class="btn btn-sand" style="text-align:left; font-size:14px; margin-top:4px;">
+            <option value="Artisan" selected>Artisan / Craftsman</option>
+            <option value="SHG">Self-Help Group (SHG)</option>
+            <option value="Farmer">Farmer / Rural Producer</option>
+            <option value="Small Seller">Home-based Maker / Small Seller</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="calc-input-group">
+          <label style="font-size:12px; font-weight:700;">Region / Location (Optional):</label>
+          <input type="text" id="onboarding-region" class="btn btn-sand" style="text-align:left; font-size:14px; margin-top:4px;" value="Khurja, Uttar Pradesh" />
+        </div>
+
+        <button class="btn btn-primary btn-lg" style="margin-top:var(--space-sm);" onclick="window.nirmaanApp.saveOnboarding()">
+          Let's create your first product →
+        </button>
+      </div>
+    </div>
+
+    <!-- Create Collection Modal -->
+    <div class="modal-overlay" id="collection-modal">
+      <div class="modal-sheet">
+        <h3 style="font-size:18px; font-weight:800; margin-bottom:4px;">Create Digital Collection</h3>
+        <p style="font-size:12px; color:var(--color-text-muted); margin-bottom:var(--space-md);">
+          Group your products into a shareable digital catalog.
+        </p>
+        <div class="calc-input-group">
+          <label style="font-size:12px; font-weight:700;">Collection Name:</label>
+          <input type="text" id="collection-title-input" class="btn btn-sand" style="text-align:left; font-size:14px; margin-top:4px;" placeholder="e.g. Diwali Collection, Kitchenware" />
+        </div>
+        <div class="calc-input-group">
+          <label style="font-size:12px; font-weight:700;">Description:</label>
+          <input type="text" id="collection-desc-input" class="btn btn-sand" style="text-align:left; font-size:14px; margin-top:4px;" placeholder="e.g. Festive earthen diyas and brass decor" />
+        </div>
+        <div style="display:flex; gap:8px; margin-top:var(--space-md);">
+          <button class="btn btn-primary" onclick="window.nirmaanApp.submitCreateCollection()">Save Collection</button>
+          <button class="btn btn-sand" onclick="document.getElementById('collection-modal').classList.remove('active')">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen / Zoom Image Modal -->
+    <div class="modal-overlay" id="fullscreen-image-modal" onclick="this.classList.remove('active')">
+      <div style="max-width:90vw; max-height:85vh; text-align:center;">
+        <img id="fullscreen-modal-img" src="" style="max-width:100%; max-height:80vh; border-radius:var(--radius-md); box-shadow:0 10px 40px rgba(0,0,0,0.5);" alt="Zoomed Product" />
+        <div style="color:#FFF; font-size:13px; font-weight:700; margin-top:8px;">Tap anywhere to close</div>
+      </div>
+    </div>
+
+    <!-- App Toast Notification -->
+    <div id="app-toast" style="display:none; position:absolute; top:70px; left:20px; right:20px; background:rgba(30, 25, 20, 0.92); backdrop-filter:blur(8px); color:#FFF; padding:10px 16px; border-radius:var(--radius-pill); font-size:13px; font-weight:600; text-align:center; z-index:9999; box-shadow:0 8px 24px rgba(0,0,0,0.25);"></div>
+
+  </div>
+
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>
